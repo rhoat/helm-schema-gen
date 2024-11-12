@@ -1,14 +1,14 @@
-# helm schema gen plugin [ CURRENTLY NOT MAINTAINED ]
+# helm schema gen plugin
 
-![](https://github.com/karuppiah7890/helm-schema-gen/workflows/goreleaser/badge.svg)
+![](https://github.com/Rhoat/helm-schema-gen/workflows/goreleaser/badge.svg)
 
 So that you don't have to write values.schema.json by hand from scratch for your Helm 3 charts
 
 [Helm](https://helm.sh) plugin to generate [JSON Schema for values yaml](https://helm.sh/docs/topics/charts/#schema-files)
 
-## Note about maintenance
+## Note about the project
 
-I currently don't have the bandwidth to reply to issues, write code and review PRs. For now I recommend forking the repo and making changes and using the fork 😅
+This is a fork of [karuppiah7890](https://github.com/karuppiah7890/helm-schema-gen)'s project. Their work laid the foundation for what this project is today and what it will become. We appreciate their contributions and commitment to the project.
 
 ## Code stuff
 
@@ -26,10 +26,10 @@ The plugin works with both Helm v2 and v3 versions as it's agnostic to the Helm
 binary version
 
 ```
-$ helm plugin install https://github.com/karuppiah7890/helm-schema-gen.git
-karuppiah7890/helm-schema-gen info checking GitHub for tag '0.0.4'
-karuppiah7890/helm-schema-gen info found version: 0.0.4 for 0.0.4/Darwin/x86_64
-karuppiah7890/helm-schema-gen info installed ./bin/helm-schema-gen
+$ helm plugin install https://github.com/Rhoat/helm-schema-gen.git
+Rhoat/helm-schema-gen info checking GitHub for tag '0.0.4'
+Rhoat/helm-schema-gen info found version: 0.0.4 for 0.0.4/Darwin/x86_64
+Rhoat/helm-schema-gen info installed ./bin/helm-schema-gen
 Installed plugin: schema-gen
 ```
 
@@ -45,7 +45,7 @@ The plugin works with both Helm v2 and v3 versions
 
 Let's take a sample `values.yaml` like the below
 
-```
+```yaml
 replicaCount: 1
 
 image:
@@ -113,7 +113,7 @@ affinity: {}
 Now if you use the plugin and pass the `values.yaml` to it, you will
 get the JSON Schema for the `values.yaml`
 
-```
+```json
 $ helm schema-gen values.yaml
 {
     "$schema": "http://json-schema.org/schema#",
@@ -222,9 +222,4 @@ $ helm schema-gen values.yaml > values.schema.json
 
 ## Issues? Feature Requests? Proposals? Feedback?
 
-Note: I currently don't have the bandwidth to reply to issues, write code and review PRs. For now I recommend forking the repo and making changes and using the fork 😅
-
-Put them all in [GitHub issues](https://github.com/karuppiah7890/helm-schema-gen/issues) 😁
-I value every feedback. I really want to make sure that my tools help people and does not
-annoy people. I want my tools to enable people and not hinder them. I'll do my best to help you
-if you face any hindrance because of using my tools! :)
+Put them all in [GitHub issues](https://github.com/Rhoat/helm-schema-gen/issues) 😁
