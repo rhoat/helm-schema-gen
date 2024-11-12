@@ -15,10 +15,13 @@ jobs:
         uses: securego/gosec@master
         with:
           args: ./...
+      - name: install dependencies
+        run: |
+          VERSION=v4.44.3 wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+          chmod +x /usr/bin/yq
       - name: Check plugin and script version
-        uses: mikefarah/yq@3.4.1
-        with:
-          cmd: ./scripts/check_version.sh plugin.yaml scripts/install_version.sh ${{ github.ref }}
+        run: |
+          ./scripts/check_version.sh plugin.yaml scripts/install_version.sh ${{ github.ref }}
       - name: Set up Go
         uses: actions/setup-go@v5
         with:

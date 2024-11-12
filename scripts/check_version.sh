@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Checks plugin.yaml version and also the install version script version
 
@@ -22,7 +22,7 @@ then
     exit 1
 fi
 
-plugin_version=$(yq read $plugin_yaml version)
+plugin_version=$(yq eval '.version' $plugin_yaml)
 
 if [ "$plugin_version" != "$expected_version" ];
 then

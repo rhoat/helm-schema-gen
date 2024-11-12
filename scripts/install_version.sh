@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ## this script must be called ONLY
 ## from the root of this project
