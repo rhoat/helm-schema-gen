@@ -7,7 +7,7 @@ import (
 
 	"github.com/karuppiah7890/go-jsonschema-generator"
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 // rootCmd represents the base command when called without any subcommands
