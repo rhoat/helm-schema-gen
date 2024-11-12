@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
+	"path/filepath"
 
 	"github.com/karuppiah7890/go-jsonschema-generator"
 	"github.com/spf13/cobra"
@@ -31,11 +31,18 @@ Examples:
 
 		valuesFilePath := args[0]
 		values := make(map[string]interface{})
-		valuesFileData, err := ioutil.ReadFile(valuesFilePath)
+		absPath, err := filepath.Abs(valuesFilePath)
+		if err != nil {
+			return err // Handle error
+		}
+		valuesFileData, err := os.ReadFile(filepath.Clean(absPath))
 		if err != nil {
 			return fmt.Errorf("error when reading file '%s': %v", valuesFilePath, err)
 		}
 		err = yaml.Unmarshal(valuesFileData, &values)
+		if err != nil {
+			return err // Handle error
+		}
 		s := &jsonschema.Document{}
 		s.ReadDeep(&values)
 		fmt.Println(s)
