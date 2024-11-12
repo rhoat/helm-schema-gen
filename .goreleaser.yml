@@ -1,17 +1,20 @@
 builds:
-  - env:
-      - CGO_ENABLED=0
+  - env: [CGO_ENABLED=0]
     goos:
       - linux
-      - darwin
       - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
 archives:
-  - replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
-      386: i386
-      amd64: x86_64
+  - name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format: tar.gz
     format_overrides:
-      - goos: windows
+      - # Which GOOS to override the format for.
+        goos: windows
+
+        # The format to use for the given GOOS.
+        #
+        # Valid options are `tar.gz`, `tgz`, `tar.xz`, `txz`, tar`, `gz`, `zip`, `binary`, and `none`.
         format: zip
