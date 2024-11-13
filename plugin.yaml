@@ -1,27 +1,8 @@
-name: schema-gen
-version: 0.0.8
-usage: generate json schema for values yaml
-description: generate json schema for values yaml
-useTunnel: true
-PlatformCommand:
-  - command: ${HELM_PLUGIN_DIR}/schema-gen
-  - os: windows
-    command: ${HELM_PLUGIN_DIR}\schema-gen.exe
-platformHooks:
-  install:
-    - command: ${HELM_PLUGIN_DIR}/scripts/install.sh
-    - os: windows
-      command: pwsh
-      args:
-        - -c
-        - ${HELM_PLUGIN_DIR}/scripts/install-binary.ps1
-  update:
-    - command: ${HELM_PLUGIN_DIR}/scripts/install.sh
-      args:
-        - -u
-    - os: windows
-      command: pwsh
-      args:
-        - -c
-        - ${HELM_PLUGIN_DIR}/scripts/install-binary.ps1
-        - -Update
+name: "schema-gen"
+version: "0.0.8"
+usage: "generate json schema for values yaml"
+description: "generate json schema for values yaml"
+command: "$HELM_PLUGIN_DIR/bin/schema-gen"
+hooks:
+  install: "cd $HELM_PLUGIN_DIR; scripts/install.sh"
+  update: "cd $HELM_PLUGIN_DIR; scripts/install.sh"

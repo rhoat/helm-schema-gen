@@ -4,7 +4,7 @@
 # which was copied from https://github.com/technosophos/helm-template
 
 PROJECT_NAME="schema-gen"
-PROJECT_GH="rhoat/helm-$PROJECT_NAME"
+PROJECT_GH="rhoat/$PROJECT_NAME"
 export GREP_COLOR="never"
 
 # Convert HELM_BIN and HELM_PLUGIN_DIR to unix if cygpath is
@@ -88,9 +88,9 @@ verifySupported() {
 getDownloadURL() {
   version=$(git -C "$HELM_PLUGIN_DIR" describe --tags --exact-match 2>/dev/null || :)
   if [ "$SCRIPT_MODE" = "install" ] && [ -n "$version" ]; then
-    DOWNLOAD_URL="https://github.com/$PROJECT_GH/releases/download/$version/helm-schema-gen-$OS-$ARCH.tgz"
+    DOWNLOAD_URL="https://github.com/$PROJECT_GH/releases/download/$version/schema-gen-$OS-$ARCH.tgz"
   else
-    DOWNLOAD_URL="https://github.com/$PROJECT_GH/releases/latest/download/helm-schema-gen-$OS-$ARCH.tgz"
+    DOWNLOAD_URL="https://github.com/$PROJECT_GH/releases/latest/download/schema-gen-$OS-$ARCH.tgz"
   fi
 }
 
@@ -124,7 +124,7 @@ downloadFile() {
 # installs it.
 installFile() {
   tar xzf "$PLUGIN_TMP_FILE" -C "$HELM_TMP"
-  HELM_TMP_BIN="$HELM_TMP/helm-schema-gen"
+  HELM_TMP_BIN="$HELM_TMP/schema-gen"
   if [ "${OS}" = "windows" ]; then
     HELM_TMP_BIN="$HELM_TMP_BIN.exe"
   fi
@@ -139,7 +139,7 @@ exit_trap() {
   rmTempDir
   if [ "$result" != "0" ]; then
     echo "Failed to install $PROJECT_NAME"
-    printf '\tFor support, go to https://github.com/rhoat/helm-schema-gen.\n'
+    printf '\tFor support, go to https://github.com/rhoat/schema-gen.\n'
   fi
   exit $result
 }

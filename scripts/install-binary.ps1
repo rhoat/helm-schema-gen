@@ -29,9 +29,9 @@ function New-TemporaryDirectory {
 function Get-Url {
   param ([Parameter(Mandatory=$true)][string] $Version, [Parameter(Mandatory=$true)][string] $Architecture)
   if ($Version -eq "latest") {
-    return "https://github.com/rhoat/helm-schema-gen/releases/latest/download/helm-schema-gen-windows-${Architecture}.tgz"
+    return "https://github.com/rhoat/schema-gen/releases/latest/download/schema-gen-windows-${Architecture}.tgz"
   }
-  return "https://github.com/databus23/helm-schema-gen/releases/download/${Version}/helm-schema-gen-windows-${Architecture}.tgz"
+  return "https://github.com/databus23/schema-gen/releases/download/${Version}/schema-gen-windows-${Architecture}.tgz"
 }
 function Download-Plugin {
   param ([Parameter(Mandatory=$true)][string] $Url, [Parameter(Mandatory=$true)][string] $Output)
@@ -41,10 +41,10 @@ function Install-Plugin {
   param ([Parameter(Mandatory=$true)][string] $ArchiveDirectory, [Parameter(Mandatory=$true)][string] $ArchiveName, [Parameter(Mandatory=$true)][string] $Destination)
   tar -xzf (Join-Path $ArchiveDirectory $ArchiveName) -C $ArchiveDirectory
   New-Item -ItemType Directory -Path $Destination -Force
-  Copy-Item -Path (Join-Path $ArchiveDirectory "helm-schema-gen.exe") -Destination $Destination -Force
+  Copy-Item -Path (Join-Path $ArchiveDirectory "schema-gen.exe") -Destination $Destination -Force
 }
 $ErrorActionPreference = "Stop"
-$archiveName = "helm-schema-gen.tgz"
+$archiveName = "schema-gen.tgz"
 $arch = Get-Architecture
 $version = Get-Version -Update $Update
 $tmpDir = New-TemporaryDirectory
