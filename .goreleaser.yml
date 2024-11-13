@@ -1,5 +1,7 @@
 builds:
-  - env: [CGO_ENABLED=0]
+  - id: default
+    main: .
+    env: [CGO_ENABLED=0]
     goos:
       - freebsd
       - darwin
