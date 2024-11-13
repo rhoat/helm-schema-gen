@@ -26,10 +26,9 @@ The plugin works with both Helm v2 and v3 versions as it's agnostic to the Helm
 binary version
 
 ```
-$ helm plugin install https://github.com/Rhoat/helm-schema-gen.git
-Rhoat/helm-schema-gen info checking GitHub for tag '0.0.4'
-Rhoat/helm-schema-gen info found version: 0.0.4 for 0.0.4/Darwin/x86_64
-Rhoat/helm-schema-gen info installed ./bin/helm-schema-gen
+$ helm plugin install https://github.com/rhoat/helm-schema-gen
+Downloading https://github.com/rhoat/helm-schema-gen/releases/download/0.0.8/helm-schema-gen-linux-amd64.tgz
+Preparing to install into /home/user/.local/share/helm/plugins/helm-schema-gen
 Installed plugin: schema-gen
 ```
 
