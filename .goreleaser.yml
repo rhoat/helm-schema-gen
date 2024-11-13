@@ -1,12 +1,26 @@
 builds:
   - env: [CGO_ENABLED=0]
     goos:
+      - freebsd
+      - darwin
       - linux
       - windows
-      - darwin
     goarch:
       - amd64
       - arm64
 archives:
-  - name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+  - id: default
+    builds:
+    - default
     format: tgz
+    name_template: '{{ .ProjectName }}-{{ if eq .Os "darwin" }}macos{{ else }}{{ .Os }}{{ end }}-{{ .Arch }}'
+    wrap_in_directory: diff
+    files:
+    - README.md
+    - plugin.yaml
+    - LICENSE
+changelog:
+  use: github-native
+
+release:
+  prerelease: auto
