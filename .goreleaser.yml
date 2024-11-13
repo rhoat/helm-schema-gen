@@ -1,6 +1,12 @@
+project_name: helm-schema-gen
 builds:
-  - binary: bin/schema-gen
-    env: [CGO_ENABLED=0]
+  - id: default
+    main: .
+    binary: bin/schema-gen
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
     goos:
       - freebsd
       - darwin
@@ -10,7 +16,17 @@ builds:
       - amd64
       - arm64
 archives:
-  - format: tgz
+  - id: default
+    builds:
+    - default
+    format: tgz
     name_template: '{{ .ProjectName }}-{{ if eq .Os "darwin" }}macos{{ else }}{{ .Os }}{{ end }}-{{ .Arch }}'
+    wrap_in_directory: schema-gen
+    files:
+    - README.md
+    - plugin.yaml
+    - LICENSE
 changelog:
   use: github-native
+release:
+  prerelease: auto
