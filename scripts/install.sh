@@ -4,7 +4,7 @@
 # which was copied from https://github.com/technosophos/helm-template
 
 PROJECT_NAME="schema-gen"
-PROJECT_GH="Rhoat/helm-$PROJECT_NAME"
+PROJECT_GH="rhoat/helm-$PROJECT_NAME"
 export GREP_COLOR="never"
 
 # Convert HELM_BIN and HELM_PLUGIN_DIR to unix if cygpath is
@@ -139,7 +139,7 @@ exit_trap() {
   rmTempDir
   if [ "$result" != "0" ]; then
     echo "Failed to install $PROJECT_NAME"
-    printf '\tFor support, go to https://github.com/Rhoat/helm-schema-gen.\n'
+    printf '\tFor support, go to https://github.com/rhoat/helm-schema-gen.\n'
   fi
   exit $result
 }
