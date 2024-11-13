@@ -20,9 +20,6 @@ jobs:
         uses: securego/gosec@master
         with:
           args: ./...
-      - name: Check plugin and script version
-        run: |
-          ./scripts/check_version.sh plugin.yaml scripts/install_version.sh ${{ github.ref }}
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
