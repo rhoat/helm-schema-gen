@@ -18,7 +18,7 @@ build:
 
 .PHONY: releaser
 releaser:
-	VERSION=$(VERSION) goreleaser release --skip=publish
+	CGO_ENABLED=0 VERSION=$(VERSION) goreleaser release --skip=publish
 
 .PHONY: install/helm3
 install/helm3: build
