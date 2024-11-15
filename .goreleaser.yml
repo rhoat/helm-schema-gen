@@ -6,8 +6,6 @@ builds:
     binary: bin/schema-gen
     env:
       - CGO_ENABLED=0
-      - VERSION={{ .Env.VERSION }}
-      - GORELEASER_DEBUG=1
     flags:
       - -trimpath
     ldflags:
