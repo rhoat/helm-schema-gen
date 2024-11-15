@@ -1,19 +1,18 @@
 package jsonschema
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
 	"github.com/google/go-cmp/cmp"
-	. "gopkg.in/check.v1"
+	"gopkg.in/check.v1"
 )
 
-func Test(t *testing.T) { TestingT(t) }
+func Test(t *testing.T) { check.TestingT(t) }
 
 type propertySuite struct{}
 
-var _ = Suite(&propertySuite{})
+var _ = check.Suite(&propertySuite{})
 
 type ExampleJSONBasic struct {
 	Omitted    string  `json:"-,omitempty"`
@@ -36,11 +35,11 @@ type ExampleJSONBasic struct {
 	Timestamp  time.Time `json:",omitempty"`
 }
 
-func (self *propertySuite) TestLoad(c *C) {
+func (ps *propertySuite) TestLoad(c *check.C) {
 	j := &Document{}
 	j.Read(&ExampleJSONBasic{})
 
-	c.Assert(*j, DeepEquals, Document{
+	c.Assert(*j, check.DeepEquals, Document{
 		Schema: "http://json-schema.org/schema#",
 		property: property{
 			Type:     "object",
@@ -72,11 +71,11 @@ type ExampleJSONBasicWithTag struct {
 	Bool bool `json:"test"`
 }
 
-func (self *propertySuite) TestLoadWithTag(c *C) {
+func (ps *propertySuite) TestLoadWithTag(c *check.C) {
 	j := &Document{}
 	j.Read(&ExampleJSONBasicWithTag{})
 
-	c.Assert(*j, DeepEquals, Document{
+	c.Assert(*j, check.DeepEquals, Document{
 		Schema: "http://json-schema.org/schema#",
 		property: property{
 			Type:     "object",
@@ -93,16 +92,16 @@ type SliceStruct struct {
 }
 
 type ExampleJSONBasicSlices struct {
-	Slice            []string      `json:",foo,omitempty"`
-	SliceOfInterface []interface{} `json:",foo"`
+	Slice            []string `json:",omitempty"`
+	SliceOfInterface []interface{}
 	SliceOfStruct    []SliceStruct
 }
 
-func (self *propertySuite) TestLoadSliceAndContains(c *C) {
+func (ps *propertySuite) TestLoadSliceAndContains(c *check.C) {
 	j := &Document{}
 	j.Read(&ExampleJSONBasicSlices{})
 
-	c.Assert(*j, DeepEquals, Document{
+	c.Assert(*j, check.DeepEquals, Document{
 		Schema: "http://json-schema.org/schema#",
 		property: property{
 			Type: "object",
@@ -139,11 +138,11 @@ type ExampleJSONNestedStruct struct {
 	}
 }
 
-func (self *propertySuite) TestLoadNested(c *C) {
+func (ps *propertySuite) TestLoadNested(c *check.C) {
 	j := &Document{}
 	j.Read(&ExampleJSONNestedStruct{})
 
-	c.Assert(*j, DeepEquals, Document{
+	c.Assert(*j, check.DeepEquals, Document{
 		Schema: "http://json-schema.org/schema#",
 		property: property{
 			Type: "object",
@@ -169,11 +168,11 @@ type ExampleJSONEmbeddedStruct struct {
 	EmbeddedStruct
 }
 
-func (self *propertySuite) TestLoadEmbedded(c *C) {
+func (ps *propertySuite) TestLoadEmbedded(c *check.C) {
 	j := &Document{}
 	j.Read(&ExampleJSONEmbeddedStruct{})
 
-	c.Assert(*j, DeepEquals, Document{
+	c.Assert(*j, check.DeepEquals, Document{
 		Schema: "http://json-schema.org/schema#",
 		property: property{
 			Type: "object",
@@ -190,11 +189,11 @@ type ExampleJSONBasicMaps struct {
 	MapOfInterface map[string]interface{}
 }
 
-func (self *propertySuite) TestLoadMap(c *C) {
+func (ps *propertySuite) TestLoadMap(c *check.C) {
 	j := &Document{}
 	j.Read(&ExampleJSONBasicMaps{})
 
-	c.Assert(*j, DeepEquals, Document{
+	c.Assert(*j, check.DeepEquals, Document{
 		Schema: "http://json-schema.org/schema#",
 		property: property{
 			Type: "object",
@@ -216,11 +215,11 @@ func (self *propertySuite) TestLoadMap(c *C) {
 	})
 }
 
-func (self *propertySuite) TestLoadNonStruct(c *C) {
+func (ps *propertySuite) TestLoadNonStruct(c *check.C) {
 	j := &Document{}
 	j.Read([]string{})
 
-	c.Assert(*j, DeepEquals, Document{
+	c.Assert(*j, check.DeepEquals, Document{
 		Schema: "http://json-schema.org/schema#",
 		property: property{
 			Type:  "array",
@@ -229,7 +228,7 @@ func (self *propertySuite) TestLoadNonStruct(c *C) {
 	})
 }
 
-func (self *propertySuite) TestString(c *C) {
+func (ps *propertySuite) TestString(c *check.C) {
 	j := &Document{}
 	j.Read(true)
 
@@ -238,10 +237,10 @@ func (self *propertySuite) TestString(c *C) {
 		"    \"type\": \"boolean\"\n" +
 		"}"
 
-	c.Assert(j.String(), Equals, expected)
+	c.Assert(j.String(), check.Equals, expected)
 }
 
-func (self *propertySuite) TestMarshal(c *C) {
+func (ps *propertySuite) TestMarshal(c *check.C) {
 	j := &Document{}
 	j.Read(10)
 
@@ -251,8 +250,8 @@ func (self *propertySuite) TestMarshal(c *C) {
 		"}"
 
 	json, err := j.Marshal()
-	c.Assert(err, IsNil)
-	c.Assert(string(json), Equals, expected)
+	c.Assert(err, check.IsNil)
+	c.Assert(string(json), check.Equals, expected)
 }
 
 func TestLoadMapDeep(t *testing.T) {
@@ -288,7 +287,7 @@ func TestLoadMapDeep(t *testing.T) {
 		}
 		if !cmp.Equal(expected, *j, cmp.AllowUnexported(Document{})) {
 			t.Fail()
-			fmt.Println(cmp.Diff(expected, *j, cmp.AllowUnexported(Document{})))
+			t.Log(cmp.Diff(expected, *j, cmp.AllowUnexported(Document{})))
 		}
 	})
 	t.Run("map of string to string", func(t *testing.T) {
@@ -312,7 +311,7 @@ func TestLoadMapDeep(t *testing.T) {
 		}
 		if !cmp.Equal(expected, *j, cmp.AllowUnexported(Document{})) {
 			t.Fail()
-			fmt.Println(cmp.Diff(expected, *j, cmp.AllowUnexported(Document{})))
+			t.Log(cmp.Diff(expected, *j, cmp.AllowUnexported(Document{})))
 		}
 	})
 	t.Run("map of string to interface", func(t *testing.T) {
@@ -417,7 +416,7 @@ func TestLoadMapDeep(t *testing.T) {
 		}
 		if !cmp.Equal(expected, *j, cmp.AllowUnexported(Document{})) {
 			t.Fail()
-			fmt.Println(cmp.Diff(expected, *j, cmp.AllowUnexported(Document{})))
+			t.Log(cmp.Diff(expected, *j, cmp.AllowUnexported(Document{})))
 		}
 	})
 	t.Run("slice of interface with string value", func(t *testing.T) {
@@ -442,7 +441,7 @@ func TestLoadMapDeep(t *testing.T) {
 		}
 		if !cmp.Equal(expected, *j, cmp.AllowUnexported(Document{})) {
 			t.Fail()
-			fmt.Println(cmp.Diff(expected, *j, cmp.AllowUnexported(Document{})))
+			t.Log(cmp.Diff(expected, *j, cmp.AllowUnexported(Document{})))
 		}
 	})
 	t.Run("slice of interface with int value", func(t *testing.T) {
@@ -467,7 +466,7 @@ func TestLoadMapDeep(t *testing.T) {
 		}
 		if !cmp.Equal(expected, *j, cmp.AllowUnexported(Document{})) {
 			t.Fail()
-			fmt.Println(cmp.Diff(expected, *j, cmp.AllowUnexported(Document{})))
+			t.Log(cmp.Diff(expected, *j, cmp.AllowUnexported(Document{})))
 		}
 	})
 	t.Run("slice of interface with float value", func(t *testing.T) {
@@ -492,7 +491,7 @@ func TestLoadMapDeep(t *testing.T) {
 		}
 		if !cmp.Equal(expected, *j, cmp.AllowUnexported(Document{})) {
 			t.Fail()
-			fmt.Println(cmp.Diff(expected, *j, cmp.AllowUnexported(Document{})))
+			t.Log(cmp.Diff(expected, *j, cmp.AllowUnexported(Document{})))
 		}
 	})
 	t.Run("slice of interface with map value", func(t *testing.T) {
@@ -532,7 +531,7 @@ func TestLoadMapDeep(t *testing.T) {
 		}
 		if !cmp.Equal(expected, *j, cmp.AllowUnexported(Document{})) {
 			t.Fail()
-			fmt.Println(cmp.Diff(expected, *j, cmp.AllowUnexported(Document{})))
+			t.Log(cmp.Diff(expected, *j, cmp.AllowUnexported(Document{})))
 		}
 	})
 }

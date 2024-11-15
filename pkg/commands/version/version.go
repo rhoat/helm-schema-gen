@@ -1,12 +1,14 @@
 package version
 
 import (
-	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 )
 
 // Version identifier populated via the CI/CD process.
+//
+//nolint:gochecknoglobals // Reason for using global variable (ldflags)
 var Version = "HEAD"
 
 func Cmd() *cobra.Command {
@@ -14,7 +16,7 @@ func Cmd() *cobra.Command {
 		Use:   "version",
 		Short: "Show version of the plugin",
 		Run: func(*cobra.Command, []string) {
-			fmt.Println(Version)
+			os.Stdout.Write([]byte(Version))
 		},
 	}
 }
