@@ -6,6 +6,7 @@ builds:
     binary: bin/schema-gen
     env:
       - CGO_ENABLED=0
+      - VERSION={{ .Env.VERSION }}
     flags:
       - -trimpath
     ldflags:
