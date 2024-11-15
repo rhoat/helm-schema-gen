@@ -24,6 +24,8 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+      - name: Read VERSION from plugin.yaml
+        run: VERSION=$(shell sed -n -e 's/version:[ "]*\([^"]*\).*/\1/p' plugin.yaml)
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
         with:
@@ -34,3 +36,4 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ env.VERSION }}
