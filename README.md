@@ -32,6 +32,13 @@ Preparing to install into /home/user/.local/share/helm/plugins/helm-schema-gen
 Installed plugin: schema-gen
 ```
 
+### Offline install
+To install this offline:
+- clone the repository
+- copy it to the desired host
+- cd to that directory
+- run `helm plugin install .`
+
 But note that the schema feature is present only in Helm v3 charts, so Helm
 chart still has to be v3, meaning - based on the Helm chart v3 spec. And the
 schema validation is only done in Helm v3. Read more in the
