@@ -63,7 +63,11 @@ func output(jsonDoc *jsonschema.Document, destination string) error {
 	var output io.WriteCloser = os.Stdout
 	defer output.Close()
 	if destination != "" {
-		file, err := os.Create(destination)
+		absDest, err := filepath.Abs(destination)
+		if err != nil {
+			return err
+		}
+		file, err := os.Create(absDest)
 		if err != nil {
 			return fmt.Errorf("failed to create output file: %w", err)
 		}

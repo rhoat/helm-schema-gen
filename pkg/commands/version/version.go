@@ -15,8 +15,9 @@ func Cmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "version",
 		Short: "Show version of the plugin",
-		Run: func(*cobra.Command, []string) {
-			os.Stdout.Write([]byte(Version))
+		RunE: func(*cobra.Command, []string) error {
+			_, err := os.Stdout.Write([]byte(Version))
+			return err
 		},
 	}
 }
