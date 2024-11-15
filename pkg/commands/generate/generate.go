@@ -17,7 +17,7 @@ func Cmd() *cobra.Command {
 		Use:   "generate <values-yaml-file>",
 		Short: "Generate JSON schema from values.yaml",
 		Long:  "Generates a JSON schema from the provided Helm values.yaml file.",
-		Args: func(cmd *cobra.Command, args []string) error {
+		Args: func(_ *cobra.Command, args []string) error {
 			return helper.CheckArgsLength(len(args), "values file")
 		},
 		RunE: generateJSONSchema,
@@ -30,7 +30,7 @@ func Cmd() *cobra.Command {
 
 // generateJSONSchema reads a values.yaml file and generates the corresponding JSON schema.
 func generateJSONSchema(cmd *cobra.Command, args []string) error {
-	var destination string = ""
+	var destination string
 	if cmd.Flags().Lookup("destination") != nil {
 		var err error
 		destination, err = cmd.Flags().GetString("destination")
@@ -47,7 +47,7 @@ func generateJSONSchema(cmd *cobra.Command, args []string) error {
 	}
 	valuesFileData, err := os.ReadFile(filepath.Clean(absPath))
 	if err != nil {
-		return fmt.Errorf("error when reading file '%s': %v", valuesFilePath, err)
+		return fmt.Errorf("error when reading file '%s': %w", valuesFilePath, err)
 	}
 	err = yaml.Unmarshal(valuesFileData, &values)
 	if err != nil {
@@ -63,9 +63,13 @@ func output(jsonDoc *jsonschema.Document, destination string) error {
 	var output io.WriteCloser = os.Stdout
 	defer output.Close()
 	if destination != "" {
-		file, err := os.Create(destination)
+		absDest, err := filepath.Abs(destination)
 		if err != nil {
-			return fmt.Errorf("failed to create output file: %v", err)
+			return err
+		}
+		file, err := os.OpenFile(filepath.Clean(absDest), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+		if err != nil {
+			return fmt.Errorf("failed to create output file: %w", err)
 		}
 		output = file
 	}

@@ -10,14 +10,17 @@ import (
 	"strings"
 )
 
-const DEFAULT_SCHEMA = "http://json-schema.org/schema#"
+const (
+	defaultSchema = "http://json-schema.org/schema#"
+	stringType    = "string"
+)
 
 type Document struct {
 	Schema string `json:"$schema,omitempty"`
 	property
 }
 
-// Reads the variable structure into the JSON-Schema Document
+// Reads the variable structure into the JSON-Schema Document.
 func (d *Document) Read(variable interface{}) {
 	d.setDefaultSchema()
 
@@ -25,7 +28,7 @@ func (d *Document) Read(variable interface{}) {
 	d.read(value.Type(), "")
 }
 
-// ReadDeep reads the variable structure into the JSON-Schema Document
+// ReadDeep reads the variable structure into the JSON-Schema Document.
 func (d *Document) ReadDeep(variable interface{}) {
 	d.setDefaultSchema()
 
@@ -35,16 +38,16 @@ func (d *Document) ReadDeep(variable interface{}) {
 
 func (d *Document) setDefaultSchema() {
 	if d.Schema == "" {
-		d.Schema = DEFAULT_SCHEMA
+		d.Schema = defaultSchema
 	}
 }
 
-// Marshal returns the JSON encoding of the Document
+// Marshal returns the JSON encoding of the Document.
 func (d *Document) Marshal() ([]byte, error) {
 	return json.MarshalIndent(d, "", "    ")
 }
 
-// String return the JSON encoding of the Document as a string
+// String return the JSON encoding of the Document as a string.
 func (d *Document) String() string {
 	jsonBytes, _ := d.Marshal()
 	return string(jsonBytes)
@@ -59,6 +62,7 @@ type property struct {
 	AdditionalProperties bool                 `json:"additionalProperties,omitempty"`
 }
 
+//nolint:unparam // opts is passed for consistency but not used in this function.
 func (p *property) read(t reflect.Type, opts tagOptions) {
 	jsType, format, kind := getTypeFromMapping(t)
 	if jsType != "" {
@@ -67,7 +71,7 @@ func (p *property) read(t reflect.Type, opts tagOptions) {
 	if format != "" {
 		p.Format = format
 	}
-
+	//nolint:exhaustive // Only handling kinds relevant to JSON schema generation.
 	switch kind {
 	case reflect.Slice:
 		p.readFromSlice(t)
@@ -80,6 +84,7 @@ func (p *property) read(t reflect.Type, opts tagOptions) {
 	}
 }
 
+//nolint:unparam // opts is passed for consistency but not used in this function.
 func (p *property) readDeep(v reflect.Value, opts tagOptions) {
 	if !v.IsValid() {
 		p.Type = "null"
@@ -92,7 +97,7 @@ func (p *property) readDeep(v reflect.Value, opts tagOptions) {
 	if format != "" {
 		p.Format = format
 	}
-
+	//nolint:exhaustive // Only handling kinds relevant to JSON schema generation.
 	switch kind {
 	case reflect.Slice:
 		p.readFromSliceDeep(v)
@@ -101,14 +106,21 @@ func (p *property) readDeep(v reflect.Value, opts tagOptions) {
 	case reflect.Struct:
 		p.readFromStructDeep(v)
 	case reflect.Ptr, reflect.Interface:
-		p.readDeep(v.Elem(), opts)
+		if v.Elem().IsValid() {
+			p.readDeep(v.Elem(), opts)
+		} else {
+			p.Type = "null"
+		}
+	default:
+		// Log unsupported kinds for debugging
+		p.Type = "unsupported"
 	}
 }
 
 func (p *property) readFromSlice(t reflect.Type) {
 	jsType, _, kind := getTypeFromMapping(t.Elem())
 	if kind == reflect.Uint8 {
-		p.Type = "string"
+		p.Type = stringType
 	} else if jsType != "" {
 		p.Items = &property{}
 		p.Items.read(t.Elem(), "")
@@ -120,7 +132,7 @@ func (p *property) readFromSliceDeep(v reflect.Value) {
 		t := v.Type()
 		jsType, _, kind := getTypeFromMapping(t.Elem())
 		if kind == reflect.Uint8 {
-			p.Type = "string"
+			p.Type = stringType
 		} else if jsType != "" {
 			p.Items = &property{}
 			if v.Len() == 0 {
@@ -134,7 +146,7 @@ func (p *property) readFromSliceDeep(v reflect.Value) {
 
 	_, _, kind := getTypeFromMapping(v.Index(0).Type())
 	if kind == reflect.Uint8 {
-		p.Type = "string"
+		p.Type = stringType
 	} else {
 		p.Items = &property{}
 		p.Items.readDeep(v.Index(0), "")
@@ -183,8 +195,7 @@ func (p *property) readFromStruct(t reflect.Type) {
 	p.Properties = make(map[string]*property, 0)
 	p.AdditionalProperties = false
 
-	count := t.NumField()
-	for i := 0; i < count; i++ {
+	for i := range t.NumField() {
 		field := t.Field(i)
 
 		tag := field.Tag.Get("json")
@@ -223,8 +234,7 @@ func (p *property) readFromStructDeep(v reflect.Value) {
 	p.Properties = make(map[string]*property, 0)
 	p.AdditionalProperties = false
 
-	count := t.NumField()
-	for i := 0; i < count; i++ {
+	for i := range t.NumField() {
 		field := t.Field(i)
 
 		tag := field.Tag.Get("json")
@@ -258,9 +268,10 @@ func (p *property) readFromStructDeep(v reflect.Value) {
 }
 
 var formatMapping = map[string][]string{
-	"time.Time": {"string", "date-time"},
+	"time.Time": {stringType, "date-time"},
 }
 
+//nolint:exhaustive // Only handling kinds relevant to JSON schema generation.
 var kindMapping = map[reflect.Kind]string{
 	reflect.Bool:    "boolean",
 	reflect.Int:     "integer",
@@ -275,7 +286,7 @@ var kindMapping = map[reflect.Kind]string{
 	reflect.Uint64:  "integer",
 	reflect.Float32: "number",
 	reflect.Float64: "number",
-	reflect.String:  "string",
+	reflect.String:  stringType,
 	reflect.Slice:   "array",
 	reflect.Struct:  "object",
 	reflect.Map:     "object",

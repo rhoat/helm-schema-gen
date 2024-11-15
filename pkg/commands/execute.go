@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"fmt"
+	"log"
 	"os"
 
 	"github.com/rhoat/helm-schema-gen/pkg/commands/generate"
@@ -9,8 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// RootCmd represents the base command when called without any subcommands
-var RootCmd = &cobra.Command{
+// rootCmd represents the base command when called without any subcommands.
+var rootCmd = &cobra.Command{
 	Use:           "helm schema-gen",
 	SilenceUsage:  true,
 	Args:          generate.Cmd().Args,
@@ -28,24 +28,24 @@ Examples:
 `,
 }
 
-// Execute initializes and executes the root command
+// Execute initializes and executes the root command.
 func Execute() {
 	if err := runCLI(); err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		os.Exit(1)
 	}
 }
 
-// runCLI runs the root command and executes the subcommands
+// runCLI runs the root command and executes the subcommands.
 func runCLI() error {
 	// Register subcommands (if not already registered)
-	RegisterSubcommands(RootCmd)
+	RegisterSubcommands(rootCmd)
 
 	// Execute the root command
-	return RootCmd.Execute()
+	return rootCmd.Execute()
 }
 
-// RegisterSubcommands registers all subcommands to the root command
+// RegisterSubcommands registers all subcommands to the root command.
 func RegisterSubcommands(rootCmd *cobra.Command) {
 	// Add subcommands dynamically
 	rootCmd.AddCommand(generate.Cmd())

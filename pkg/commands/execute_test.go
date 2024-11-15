@@ -1,3 +1,4 @@
+//nolint:testpackage // internal testing for benchmark
 package commands
 
 import (
@@ -7,6 +8,6 @@ import (
 
 func BenchmarkRootCommandExecution(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		RootCmd.RunE(nil, []string{filepath.Join("..", "testdata", "values.yaml")})
+		rootCmd.RunE(nil, []string{filepath.Join("..", "testdata", "values.yaml")})
 	}
 }
