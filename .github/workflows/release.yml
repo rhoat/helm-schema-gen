@@ -24,8 +24,10 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
-      - name: Read VERSION from plugin.yaml
-        run: VERSION=$(shell sed -n -e 's/version:[ "]*\([^"]*\).*/\1/p' plugin.yaml)
+      - name: Extract version from plugin.yaml
+        run: |
+          VERSION=$(sed -n -e 's/version:[ "]*\([^"]*\).*/\1/p' plugin.yaml)
+          echo "Version: $VERSION"
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
         with:
