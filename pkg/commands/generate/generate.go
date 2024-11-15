@@ -67,7 +67,7 @@ func output(jsonDoc *jsonschema.Document, destination string) error {
 		if err != nil {
 			return err
 		}
-		file, err := os.Create(absDest)
+		file, err := os.OpenFile(filepath.Clean(absDest), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
 		if err != nil {
 			return fmt.Errorf("failed to create output file: %w", err)
 		}
