@@ -1,4 +1,4 @@
-name: goreleaser
+name: securityScan
 
 on:
   pull_request:

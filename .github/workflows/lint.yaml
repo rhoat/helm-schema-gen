@@ -1,5 +1,5 @@
 ---
-name: Lint
+name: lint
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   lint:
-    name: Lint
+    name: golangci
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
