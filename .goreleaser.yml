@@ -1,3 +1,4 @@
+version: 2
 project_name: helm-schema-gen
 builds:
   - id: default
@@ -7,6 +8,8 @@ builds:
       - CGO_ENABLED=0
     flags:
       - -trimpath
+    ldflags:
+      - -X github.com/rhoat/helm-schema-gen/pkg/commands/version.Version={{ .Env.VERSION }}
     goos:
       - freebsd
       - darwin

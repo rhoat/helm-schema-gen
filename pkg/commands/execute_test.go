@@ -1,4 +1,4 @@
-package cmd
+package commands
 
 import (
 	"path/filepath"
@@ -7,6 +7,6 @@ import (
 
 func BenchmarkRootCommandExecution(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		rootCmd.RunE(nil, []string{filepath.Join("..", "testdata", "values.yaml")})
+		RootCmd.RunE(nil, []string{filepath.Join("..", "testdata", "values.yaml")})
 	}
 }
