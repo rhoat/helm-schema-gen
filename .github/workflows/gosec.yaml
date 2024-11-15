@@ -1,0 +1,21 @@
+name: goreleaser
+
+on:
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  Gosec:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run Gosec Security Scanner
+        uses: securego/gosec@master
+        with:
+          args: ./...
+        
