@@ -112,7 +112,7 @@ When run with the `-schemagen` flag, you will be able to specify the type that i
 helm schema-gen generate ./testdata/values.yaml --schemagen --destination json.schema
 ```
 
-```
+```json
 {
     "$schema": "http://json-schema.org/schema#",
     "type": "object",
