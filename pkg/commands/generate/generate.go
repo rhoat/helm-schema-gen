@@ -24,7 +24,12 @@ func Cmd() *cobra.Command {
 		},
 		RunE: generateJSONSchema,
 	}
-	cmd.PersistentFlags().BoolVar(&features.Schemagen, "schemagen", false, "Allows the user to use +schemagen comments to modify the output")
+	cmd.PersistentFlags().BoolVar(
+		&features.Schemagen,
+		"schemagen",
+		false,
+		"Allows the user to use +schemagen comments to modify the output",
+	)
 	cmd.Flags().String("destination", "", "Sets the default output location for the generated schema file")
 
 	return cmd

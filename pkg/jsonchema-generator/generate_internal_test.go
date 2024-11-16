@@ -64,7 +64,7 @@ autoscaling:
 			jsondata, _ := json.MarshalIndent(result, "", "  ")
 			t.Log(string(jsondata))
 			if diff := cmp.Diff(jsonexpected, jsondata); diff != "" {
-				t.Errorf(diff)
+				t.Error(diff)
 			}
 		})
 	}

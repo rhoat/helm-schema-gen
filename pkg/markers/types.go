@@ -11,12 +11,13 @@ import (
 )
 
 var (
+	//nolint:unused // Keeping for future expansion of functionality.
 	markerRegex = regexp.MustCompile(`(\+schemagen:.*)`)
 	typeMarker  = regexp.MustCompile(`(\+schemagen:type:.*)`)
 	getValue    = regexp.MustCompile(`^.*:(\w+)$`)
 )
 
-// This will be used to store schema information
+// This will be used to store schema information.
 type SchemaInfo struct {
 	Path       string
 	SchemaType string
@@ -28,6 +29,7 @@ func UncommentYAML(ctx context.Context, node *yaml.Node, schemaData *[]SchemaInf
 		// Initialize an empty slice if schemaData is nil
 		schemaData = &[]SchemaInfo{}
 	}
+	//nolint: exhaustive // These types are not needed yaml.ScalarNode, yaml.AliasNode
 	switch node.Kind {
 	case yaml.DocumentNode, yaml.SequenceNode:
 		// Traverse through the sequence or document node
@@ -37,7 +39,7 @@ func UncommentYAML(ctx context.Context, node *yaml.Node, schemaData *[]SchemaInf
 		return node
 	case yaml.MappingNode:
 		// Iterate through key-value pairs in a mapping node
-		for i := 0; i < len(node.Content); i = i + 2 {
+		for i := 0; i < len(node.Content); i += 2 {
 			key := node.Content[i]
 			value := node.Content[i+1]
 			fullPath := parentPath + "." + key.Value

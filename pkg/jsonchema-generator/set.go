@@ -1,6 +1,7 @@
 package jsonschema
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 )
@@ -9,7 +10,7 @@ func SetTypeAtPath(doc *Document, path string, newType string) error {
 	// Split the path into keys
 	keys := strings.Split(path, ".")
 	if len(keys) == 0 {
-		return fmt.Errorf("invalid path")
+		return errors.New("invalid path")
 	}
 	keys = keys[1:]
 

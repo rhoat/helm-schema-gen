@@ -1,5 +1,5 @@
 package features
 
 var (
-	Schemagen bool = false
+	Schemagen = false
 )

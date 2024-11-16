@@ -6,7 +6,7 @@ import (
 	"go.uber.org/zap"
 )
 
-// Define a key type to avoid key collisions in context
+// Define a key type to avoid key collisions in context.
 type contextKey string
 
 const loggerKey contextKey = "logger"
@@ -18,7 +18,7 @@ func SetLogger(ctx context.Context, logger *zap.Logger) context.Context {
 func GetLogger(ctx context.Context) *zap.Logger {
 	logger, ok := ctx.Value(loggerKey).(*zap.Logger)
 	if !ok {
-		logger, _ := zap.NewProduction()
+		logger, _ = zap.NewProduction()
 		return logger
 	}
 	return logger

@@ -8,8 +8,6 @@ import (
 )
 
 func TestJSONSchemaTypes(t *testing.T) {
-
-	// Table-driven tests for type validation
 	tests := []struct {
 		name                 string
 		path                 string
@@ -83,7 +81,6 @@ func TestJSONSchemaTypes(t *testing.T) {
 			if diff := cmp.Diff(jsonexpected, jsondata); diff != "" {
 				t.Errorf("")
 			}
-
 		})
 	}
 }

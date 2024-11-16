@@ -27,7 +27,7 @@ var rootCmd = &cobra.Command{
 		cmd.Println(`Command "helm schema-gen" is deprecated, use "helm schema-gen generate" instead`)
 		return generate.Cmd().RunE(cmd, args)
 	},
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+	PersistentPreRun: func(cmd *cobra.Command, _ []string) {
 		// Parse the log level and initialize the logger
 		level, err := zapcore.ParseLevel(logLevel)
 		if err != nil {
@@ -73,5 +73,11 @@ func RegisterSubcommands(rootCmd *cobra.Command) {
 }
 
 func registerPersistentFlags(rootCmd *cobra.Command) {
-	rootCmd.PersistentFlags().StringVarP(&logLevel, "log-level", "l", "info", "Set the logging level (debug, info, warn, error, dpanic, panic, fatal)")
+	rootCmd.PersistentFlags().StringVarP(
+		&logLevel,
+		"log-level",
+		"l",
+		"info",
+		"Set the logging level (debug, info, warn, error, dpanic, panic, fatal)",
+	)
 }

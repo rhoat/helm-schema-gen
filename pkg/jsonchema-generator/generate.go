@@ -14,7 +14,6 @@ import (
 )
 
 func Generate(ctx context.Context, yamlValuesFile io.Reader) (*Document, error) {
-
 	logger := ctxlogger.GetLogger(ctx)
 	logger.Debug("Reading yaml from io reader")
 	valuesFileData, err := io.ReadAll(yamlValuesFile)
@@ -50,14 +49,20 @@ func Generate(ctx context.Context, yamlValuesFile io.Reader) (*Document, error) 
 		logger.Debug("placing values into document")
 		// Apply changes to the data based on SchemaInfo
 		for _, schemaInfo := range schemaData {
-			logger.Debug("attempting to modify document", zap.String("Path", schemaInfo.Path), zap.String("Type", schemaInfo.SchemaType))
-			if err := SetTypeAtPath(s, schemaInfo.Path, schemaInfo.SchemaType); err != nil {
-				logger.Error("Setting type at path", zap.String("Path", schemaInfo.Path), zap.String("Type", schemaInfo.SchemaType), zap.Error(err))
+			logger.Debug(
+				"attempting to modify document",
+				zap.String("Path", schemaInfo.Path),
+				zap.String("Type", schemaInfo.SchemaType),
+			)
+			if err = SetTypeAtPath(s, schemaInfo.Path, schemaInfo.SchemaType); err != nil {
+				logger.Error(
+					"Setting type at path",
+					zap.String("Path", schemaInfo.Path),
+					zap.String("Type", schemaInfo.SchemaType),
+					zap.Error(err),
+				)
 			}
-
 		}
-
 	}
-
 	return s, nil
 }
