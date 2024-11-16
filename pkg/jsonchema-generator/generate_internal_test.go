@@ -1,6 +1,7 @@
 package jsonschema
 
 import (
+	"context"
 	"encoding/json"
 	"strings"
 	"testing"
@@ -55,7 +56,7 @@ autoscaling:
 
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			result, err := Generate(strings.NewReader(tC.mockYaml))
+			result, err := Generate(context.TODO(), strings.NewReader(tC.mockYaml))
 			if err != nil {
 				t.Errorf("failed to generate %s", err.Error())
 			}

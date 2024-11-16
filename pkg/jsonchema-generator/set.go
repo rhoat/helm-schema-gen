@@ -7,10 +7,11 @@ import (
 
 func SetTypeAtPath(doc *Document, path string, newType string) error {
 	// Split the path into keys
-	keys := strings.Split(path, ".")[1:]
+	keys := strings.Split(path, ".")
 	if len(keys) == 0 {
 		return fmt.Errorf("invalid path")
 	}
+	keys = keys[1:]
 
 	current := &doc.Properties
 	for i, key := range keys {

@@ -25,3 +25,8 @@ install/helm3: build
 	mkdir -p $(HELM_3_PLUGINS)/helm-schema-gen/bin
 	cp bin/schema-gen $(HELM_3_PLUGINS)/helm-schema-gen/bin
 	cp plugin.yaml $(HELM_3_PLUGINS)/helm-schema-gen/
+
+.PHONY: tag
+	git push origin :refs/tags/$(VERSION)
+	git tag $(VERSION)
+	git push origin --tags

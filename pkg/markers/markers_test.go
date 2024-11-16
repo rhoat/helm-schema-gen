@@ -1,6 +1,7 @@
 package markers_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -63,7 +64,7 @@ map_gen_settings:
 			}
 
 			// Process the YAML nodes to handle comments with +schemagen markers
-			rootNode = *markers.UncommentYAML(&rootNode, &schemaData, "")
+			rootNode = *markers.UncommentYAML(context.TODO(), &rootNode, &schemaData, "")
 			if diff := cmp.Diff(tt.expected, &schemaData); diff != "" {
 				t.Errorf("MakeGatewayInfo() mismatch (-want +got):\n%s", diff)
 			}
