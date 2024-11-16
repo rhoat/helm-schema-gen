@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/rhoat/helm-schema-gen/pkg/features"
 )
 
 func TestGenerate(t *testing.T) {
@@ -21,6 +22,7 @@ func TestGenerate(t *testing.T) {
 affinity: {}
 autoscaling:
   enabled: true
+
   # +schemagen:type:boolean
   maxReplicas: 5
   minReplicas: 1
@@ -56,6 +58,7 @@ autoscaling:
 
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
+			features.Schemagen = true
 			result, err := Generate(context.TODO(), strings.NewReader(tC.mockYaml))
 			if err != nil {
 				t.Errorf("failed to generate %s", err.Error())
