@@ -9,7 +9,6 @@ import (
 	"github.com/rhoat/helm-schema-gen/pkg/commands/helper"
 	jsonschema "github.com/rhoat/helm-schema-gen/pkg/jsonchema-generator"
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v3"
 )
 
 func Cmd() *cobra.Command {
@@ -40,22 +39,19 @@ func generateJSONSchema(cmd *cobra.Command, args []string) error {
 	}
 
 	valuesFilePath := args[0]
-	values := make(map[string]interface{})
 	absPath, err := filepath.Abs(valuesFilePath)
 	if err != nil {
 		return err
 	}
-	valuesFileData, err := os.ReadFile(filepath.Clean(absPath))
+	file, err := os.Open(filepath.Clean(absPath))
 	if err != nil {
 		return fmt.Errorf("error when reading file '%s': %w", valuesFilePath, err)
 	}
-	err = yaml.Unmarshal(valuesFileData, &values)
+	defer file.Close()
+	s, err := jsonschema.Generate(file)
 	if err != nil {
 		return err
 	}
-	s := &jsonschema.Document{}
-	s.ReadDeep(&values)
-
 	return output(s, destination)
 }
 
