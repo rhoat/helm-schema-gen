@@ -1,0 +1,8 @@
+autoscaling:
+  enabled: false
+  minReplicas: 1 
+
+  # +schemagen:type:number
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
