@@ -12,9 +12,10 @@ import (
 
 func TestGenerate(t *testing.T) {
 	testCases := []struct {
-		desc     string
-		mockYaml string
-		expected Document
+		desc             string
+		mockYaml         string
+		schemaGenEnabled bool
+		expected         Document
 	}{
 		{
 			desc: "replace minReplicas",
@@ -28,6 +29,7 @@ autoscaling:
   minReplicas: 1
   targetCPUUtilizationPercentage: 80
 `,
+			schemaGenEnabled: true,
 			expected: Document{
 				Schema: "http://json-schema.org/schema#",
 				property: property{
@@ -58,7 +60,7 @@ autoscaling:
 
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			features.Schemagen = true
+			features.Schemagen = tC.schemaGenEnabled
 			result, err := Generate(context.TODO(), strings.NewReader(tC.mockYaml))
 			if err != nil {
 				t.Errorf("failed to generate %s", err.Error())
