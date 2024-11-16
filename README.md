@@ -42,178 +42,100 @@ The plugin works with both Helm v2 and v3 versions
 Let's take a sample `values.yaml` like the below
 
 ```yaml
-replicaCount: 1
-
-image:
-  repository: nginx
-  pullPolicy: IfNotPresent
-
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name:
-
-podSecurityContext: {}
-  # fsGroup: 2000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
-service:
-  type: ClusterIP
-  port: 80
-
-ingress:
+autoscaling:
   enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths: []
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
+  minReplicas: 1 
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
 ```
 
 Now if you use the plugin and pass the `values.yaml` to it, you will
 get the JSON Schema for the `values.yaml`
 
 ```json
-$ helm schema-gen values.yaml
 {
     "$schema": "http://json-schema.org/schema#",
     "type": "object",
     "properties": {
-        "affinity": {
-            "type": "object"
-        },
-        "fullnameOverride": {
-            "type": "string"
-        },
-        "image": {
+        "autoscaling": {
             "type": "object",
             "properties": {
-                "pullPolicy": {
-                    "type": "string"
-                },
-                "repository": {
-                    "type": "string"
-                }
-            }
-        },
-        "imagePullSecrets": {
-            "type": "array"
-        },
-        "ingress": {
-            "type": "object",
-            "properties": {
-                "annotations": {
-                    "type": "object"
-                },
                 "enabled": {
                     "type": "boolean"
                 },
-                "hosts": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "host": {
-                                "type": "string"
-                            },
-                            "paths": {
-                                "type": "array"
-                            }
-                        }
-                    }
-                },
-                "tls": {
-                    "type": "array"
-                }
-            }
-        },
-        "nameOverride": {
-            "type": "string"
-        },
-        "nodeSelector": {
-            "type": "object"
-        },
-        "podSecurityContext": {
-            "type": "object"
-        },
-        "replicaCount": {
-            "type": "integer"
-        },
-        "resources": {
-            "type": "object"
-        },
-        "securityContext": {
-            "type": "object"
-        },
-        "service": {
-            "type": "object",
-            "properties": {
-                "port": {
+                "maxReplicas": {
                     "type": "integer"
                 },
-                "type": {
-                    "type": "string"
-                }
-            }
-        },
-        "serviceAccount": {
-            "type": "object",
-            "properties": {
-                "create": {
-                    "type": "boolean"
+                "minReplicas": {
+                    "type": "integer"
                 },
-                "name": {
-                    "type": "null"
+                "targetCPUUtilizationPercentage": {
+                    "type": "integer"
                 }
             }
-        },
-        "tolerations": {
-            "type": "array"
         }
     }
 }
+
 ```
 
 You can save it to a file like this
 
+```bash
+helm schema-gen generate ./values.yaml --destination json.schema
 ```
-$ helm schema-gen values.yaml > values.schema.json
+
+### schemagen helpers
+> [!WARNING]  
+> This is an experimental feature.
+
+For more advanced use cases, if you want to modify the type that is output you can leverage the schemagen comments.
+> [!TIP]
+> The tool looks at the Headcomment on the yaml node, in order to make sure your comment isn't picked up as a footer its best to leave a space above your comment shown below. 
+```yaml
+autoscaling:
+  enabled: false
+  minReplicas: 1 
+
+  # +schemagen:type:number
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+```
+When run with the `-schemagen` flag, you will be able to specify the type that is output in your json. 
+
+> [!NOTE]
+> There is no restriction on the type that can be put in here, so if you mistype something or put in garbage you will get garbage out.
+
+```bash
+helm schema-gen generate ./testdata/values.yaml --schemagen --destination json.schema
+```
+
+```
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "autoscaling": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "maxReplicas": {
+                    "type": "number"
+                },
+                "minReplicas": {
+                    "type": "integer"
+                },
+                "targetCPUUtilizationPercentage": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}
 ```
 
 ## Issues? Feature Requests? Proposals? Feedback?
