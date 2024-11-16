@@ -1,5 +1,5 @@
 name: "schema-gen"
-version: "0.0.10"
+version: "0.0.11"
 usage: "generate json schema for values yaml"
 description: "generate json schema for values yaml"
 command: "$HELM_PLUGIN_DIR/bin/schema-gen"
