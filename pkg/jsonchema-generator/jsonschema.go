@@ -111,9 +111,6 @@ func (p *property) readDeep(v reflect.Value, opts tagOptions) {
 		} else {
 			p.Type = "null"
 		}
-	default:
-		// Log unsupported kinds for debugging
-		p.Type = "unsupported"
 	}
 }
 
